@@ -19,8 +19,10 @@ const starters = [
 ];
 
 const godPool = [
-  {name:"Zeus",class:"storm",pantheon:"Greek",symbol:"⚡",rarity:"Legendary",atk:45,def:32,spd:20,cost:300},
-  {name:"Athena",class:"moon",pantheon:"Greek",symbol:"🛡️",rarity:"Epic",atk:30,def:42,spd:18,cost:220},
+  {name:"Zeus",image:"assets/gods/zeus.png",class:"storm",pantheon:"Greek",symbol:"⚡",rarity:"Legendary",atk:45,def:32,spd:20,cost:300},
+  {name:"Athena",image:"assets/gods/athena.png",class:"moon",pantheon:"Greek",symbol:"🛡️",rarity:"Epic",atk:30,def:42,spd:18,cost:220},
+  {name:"Thor",image:"assets/gods/thor.png",class:"storm",pantheon:"Norse",symbol:"🔨",rarity:"Legendary",atk:48,def:34,spd:16,cost:320},
+
   {name:"Ares",class:"war",pantheon:"Greek",symbol:"⚔️",rarity:"Epic",atk:42,def:24,spd:21,cost:220},
   {name:"Poseidon",class:"ocean",pantheon:"Greek",symbol:"🌊",rarity:"Epic",atk:35,def:34,spd:17,cost:240},
   {name:"Hades",class:"death",pantheon:"Greek",symbol:"💀",rarity:"Legendary",atk:44,def:38,spd:16,cost:320},
@@ -29,7 +31,6 @@ const godPool = [
   {name:"Hera",class:"nature",pantheon:"Greek",symbol:"👑",rarity:"Epic",atk:29,def:44,spd:16,cost:240},
 
   {name:"Odin",class:"moon",pantheon:"Norse",symbol:"🪶",rarity:"Legendary",atk:40,def:40,spd:18,cost:300},
-  {name:"Thor",class:"storm",pantheon:"Norse",symbol:"🔨",rarity:"Legendary",atk:48,def:34,spd:16,cost:320},
   {name:"Loki",class:"death",pantheon:"Norse",symbol:"🃏",rarity:"Epic",atk:36,def:25,spd:28,cost:230},
   {name:"Freya",class:"nature",pantheon:"Norse",symbol:"✨",rarity:"Epic",atk:32,def:36,spd:21,cost:230},
   {name:"Tyr",class:"war",pantheon:"Norse",symbol:"🗡️",rarity:"Epic",atk:40,def:34,spd:18,cost:250},
@@ -98,23 +99,16 @@ let battleState = {
 
 function newGod(base){
   const hp = 100 + base.def * 3;
-  return {
-    ...base,
-    level: 1,
-    rank: 0,
-    xp: 0,
-    hp,
-    maxHp: hp
-  };
+  return {...base,level:1,rank:0,xp:0,hp,maxHp:hp};
 }
 
 function saveGame(showAlert = false){
-  localStorage.setItem("realmOfGodsSaveV2", JSON.stringify({game, relics}));
+  localStorage.setItem("realmOfGodsSaveV3", JSON.stringify({game, relics}));
   if(showAlert) alert("Game saved.");
 }
 
 function loadGame(){
-  const save = localStorage.getItem("realmOfGodsSaveV2");
+  const save = localStorage.getItem("realmOfGodsSaveV3");
   if(!save) return;
 
   try{
@@ -132,7 +126,7 @@ function loadGame(){
 
 function resetGame(){
   if(confirm("Reset your Realm of Gods save?")){
-    localStorage.removeItem("realmOfGodsSaveV2");
+    localStorage.removeItem("realmOfGodsSaveV3");
     location.reload();
   }
 }
@@ -172,6 +166,14 @@ function showScreen(id){
 }
 
 function portrait(g, mini = false){
+  if(g.image){
+    return `
+      <div class="${mini ? "mini-img" : "portrait-img"}">
+        <img src="${g.image}" alt="${g.name}">
+      </div>
+    `;
+  }
+
   return `
     <div class="${mini ? "mini" : "portrait"} ${g.class}">
       <div class="symbol">${g.symbol}</div>
