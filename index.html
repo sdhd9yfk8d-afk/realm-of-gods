@@ -2,21 +2,136 @@
 <html>
 <head>
   <title>Realm of Gods</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 
 <body>
 
-<div class="container">
-  <h1>Realm of Gods</h1>
-  <p>Build your divine empire. Conquer the world. Become worshipped.</p>
+<div class="app">
 
-  <button onclick="startGame()">Enter Realm</button>
+  <header>
+    <h1>Realm of Gods</h1>
+    <p>Choose a pantheon. Recruit gods. Build influence. Rule the realm.</p>
+  </header>
+
+  <section class="pantheon-grid">
+
+    <div class="god-card greek">
+      <div class="god-character zeus">
+        <div class="head"></div>
+        <div class="body"></div>
+        <div class="staff lightning"></div>
+      </div>
+
+      <h2>Greek Pantheon</h2>
+      <p>Powerful gods of Olympus. Strong balance of attack, wisdom, and influence.</p>
+
+      <ul>
+        <li>Zeus — Storm ruler</li>
+        <li>Athena — Strategy goddess</li>
+        <li>Ares — War god</li>
+      </ul>
+
+      <button onclick="choosePantheon('Greek Pantheon')">Choose Greek</button>
+    </div>
+
+    <div class="god-card norse">
+      <div class="god-character odin">
+        <div class="head"></div>
+        <div class="body"></div>
+        <div class="staff spear"></div>
+        <div class="raven left"></div>
+        <div class="raven right"></div>
+      </div>
+
+      <h2>Norse Pantheon</h2>
+      <p>Battle-hardened gods of Asgard. Strong defense, raids, and warrior strength.</p>
+
+      <ul>
+        <li>Odin — All-father</li>
+        <li>Thor — Thunder defender</li>
+        <li>Loki — Trickster god</li>
+      </ul>
+
+      <button onclick="choosePantheon('Norse Pantheon')">Choose Norse</button>
+    </div>
+
+    <div class="god-card egyptian">
+      <div class="god-character anubis">
+        <div class="jackal-head"></div>
+        <div class="body"></div>
+        <div class="staff ankh"></div>
+      </div>
+
+      <h2>Egyptian Pantheon</h2>
+      <p>Ancient divine rulers of the Nile. Strong faith, relics, and underworld powers.</p>
+
+      <ul>
+        <li>Ra — Sun ruler</li>
+        <li>Anubis — Underworld guardian</li>
+        <li>Isis — Magic goddess</li>
+      </ul>
+
+      <button onclick="choosePantheon('Egyptian Pantheon')">Choose Egyptian</button>
+    </div>
+
+  </section>
+
+  <section id="dashboard" class="dashboard hidden">
+    <h2 id="chosenTitle">Your Realm</h2>
+
+    <div class="stats">
+      <div>
+        <strong>Worshippers</strong>
+        <span id="worshippers">100</span>
+      </div>
+      <div>
+        <strong>Faith</strong>
+        <span id="faith">50</span>
+      </div>
+      <div>
+        <strong>Influence</strong>
+        <span id="influence">10</span>
+      </div>
+    </div>
+
+    <button onclick="gainFaith()">Collect Offerings</button>
+    <button onclick="trainGods()">Train Gods</button>
+  </section>
+
 </div>
 
 <script>
-function startGame(){
-  alert("Choose your Pantheon next.");
+let worshippers = 100;
+let faith = 50;
+let influence = 10;
+
+function choosePantheon(name){
+  document.querySelector(".pantheon-grid").style.display = "none";
+  document.getElementById("dashboard").classList.remove("hidden");
+  document.getElementById("chosenTitle").innerText = name + " Realm";
+}
+
+function gainFaith(){
+  faith += 25;
+  worshippers += 10;
+  updateStats();
+}
+
+function trainGods(){
+  if(faith >= 25){
+    faith -= 25;
+    influence += 5;
+    updateStats();
+  } else {
+    alert("Not enough Faith.");
+  }
+}
+
+function updateStats(){
+  document.getElementById("worshippers").innerText = worshippers;
+  document.getElementById("faith").innerText = faith;
+  document.getElementById("influence").innerText = influence;
 }
 </script>
 
