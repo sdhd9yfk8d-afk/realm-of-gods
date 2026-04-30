@@ -1,553 +1,172 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Realm of Gods</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      background:#070914;
-      color:#f5ead4;
-      font-family:Arial,sans-serif;
-    }
-    header{
-      background:linear-gradient(90deg,#11182f,#1c2545,#11182f);
-      border-bottom:1px solid #6f5a2d;
-      padding:18px;
-      text-align:center;
-    }
-    header h1{
-      margin:0;
-      color:#ffe9a6;
-      font-size:38px;
-      text-shadow:0 0 18px rgba(255,220,120,.5);
-    }
-    header p{margin:6px 0 0;color:#cdbf9f}
-
-    .resources{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:10px;
-      padding:12px;
-      background:#0d1326;
-      border-bottom:1px solid #27345f;
-    }
-    .resource{
-      background:#141d35;
-      border:1px solid #2f3b5f;
-      border-radius:12px;
-      padding:10px;
-      text-align:center;
-    }
-    .resource strong{display:block;color:#ffe9a6}
-
-    nav{
-      display:flex;
-      overflow-x:auto;
-      gap:8px;
-      padding:12px;
-      background:#090d1a;
-      border-bottom:1px solid #27345f;
-    }
-    nav button,.btn{
-      border:none;
-      border-radius:10px;
-      padding:12px 16px;
-      background:#3459d1;
-      color:white;
-      font-weight:bold;
-      cursor:pointer;
-      white-space:nowrap;
-    }
-    nav button:hover,.btn:hover{background:#5477ff}
-
-    main{padding:16px;max-width:1200px;margin:auto}
-
-    .screen{display:none}
-    .screen.active{display:block}
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-      gap:16px;
-    }
-    .card{
-      background:linear-gradient(180deg,#17213d,#0b1020);
-      border:1px solid #6f5a2d;
-      border-radius:16px;
-      padding:16px;
-      box-shadow:0 15px 40px rgba(0,0,0,.35);
-    }
-    .card h2,.card h3{color:#ffe9a6;margin-top:0}
-    .muted{color:#c7b896;font-size:14px}
-    .god-icon{
-      width:90px;height:90px;border-radius:50%;
-      display:flex;align-items:center;justify-content:center;
-      font-size:42px;margin:0 auto 12px;
-      background:radial-gradient(circle,#ffe9a6,#805d1c);
-      color:#101010;
-      box-shadow:0 0 25px rgba(255,220,120,.35);
-      animation:float 3s ease-in-out infinite;
-    }
-    .stats{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:8px;
-      margin:12px 0;
-    }
-    .stat{
-      background:#0e1529;
-      border:1px solid #27345f;
-      border-radius:10px;
-      padding:8px;
-    }
-    .rank{
-      color:#9ed8ff;
-      font-weight:bold;
-    }
-    .battle-log{
-      background:#050814;
-      border:1px solid #27345f;
-      border-radius:12px;
-      padding:12px;
-      min-height:180px;
-      max-height:260px;
-      overflow:auto;
-      line-height:1.5;
-    }
-    .danger{color:#ff7777}
-    .good{color:#32d583}
-    .gold{color:#ffe9a6}
-    .locked{opacity:.55}
-    .small-btn{
-      padding:9px 11px;
-      margin:4px 3px;
-      font-size:13px;
-    }
-    @keyframes float{
-      0%{transform:translateY(0)}
-      50%{transform:translateY(-7px)}
-      100%{transform:translateY(0)}
-    }
-  </style>
+  <link rel="stylesheet" href="style.css?v=1">
 </head>
 
 <body>
 
-<header>
+<div id="starterOverlay" class="overlay">
+  <div class="overlay-box">
+    <h1>Realm of Gods</h1>
+    <p>Choose your first Ascended Soul.</p>
+    <div id="starterChoices" class="grid"></div>
+  </div>
+</div>
+
+<header class="top-header">
   <h1>Realm of Gods</h1>
-  <p>Recruit gods. Upgrade divine ranks. Equip relics. Battle rival pantheons.</p>
+  <p>Train gods. Collect relics. Battle rival pantheons.</p>
 </header>
 
 <section class="resources">
-  <div class="resource"><strong id="faith">0</strong>Faith</div>
-  <div class="resource"><strong id="worshippers">0</strong>Worshippers</div>
-  <div class="resource"><strong id="gems">0</strong>Divine Gems</div>
-  <div class="resource"><strong id="power">0</strong>Total Power</div>
+  <div><strong id="faith">0</strong><span>Faith</span></div>
+  <div><strong id="favor">0</strong><span>Favor</span></div>
+  <div><strong id="worshippers">0</strong><span>Worshippers</span></div>
+  <div><strong id="essence">0</strong><span>Essence</span></div>
+  <div><strong id="power">0</strong><span>Power</span></div>
 </section>
 
-<nav>
+<nav class="nav-bar">
   <button onclick="showScreen('temple')">Temple</button>
-  <button onclick="showScreen('gods')">Gods</button>
-  <button onclick="showScreen('recruit')">Recruit</button>
-  <button onclick="showScreen('battle')">Battle</button>
+  <button onclick="showScreen('roster')">Gods</button>
+  <button onclick="showScreen('lineup')">Lineup</button>
+  <button onclick="showScreen('summon')">Summon</button>
+  <button onclick="showScreen('training')">Training</button>
   <button onclick="showScreen('relics')">Relics</button>
-  <button onclick="showScreen('shop')">Shop</button>
-  <button onclick="saveGame()">Save</button>
-  <button onclick="resetGame()">Reset</button>
+  <button onclick="showScreen('battle')">Battle</button>
+  <button onclick="showScreen('boss')">Boss</button>
+  <button onclick="showScreen('oracle')">Oracle</button>
+  <button onclick="showScreen('goals')">Goals</button>
+  <button onclick="showScreen('settings')">Settings</button>
 </nav>
 
 <main>
 
-  <section id="temple" class="screen active">
-    <div class="card">
-      <h2>Your Temple</h2>
-      <p class="muted">Your temple generates Faith and Worshippers. Upgrade your gods to increase your realm power.</p>
-      <div class="stats">
-        <div class="stat">Temple Level: <strong id="templeLevel">1</strong></div>
-        <div class="stat">Gods Owned: <strong id="ownedCount">0</strong></div>
-        <div class="stat">Battle Wins: <strong id="wins">0</strong></div>
-        <div class="stat">Battle Losses: <strong id="losses">0</strong></div>
-      </div>
-      <button class="btn" onclick="collectTemple()">Collect Temple Offerings</button>
-      <button class="btn" onclick="upgradeTemple()">Upgrade Temple - <span id="templeCost">150</span> Faith</button>
+<section id="temple" class="screen active">
+  <div class="hero-card">
+    <h2>Temple</h2>
+    <p>Your home base. Collect offerings, heal gods, and upgrade your realm.</p>
+
+    <div class="stats-grid">
+      <div>Temple Level: <b id="templeLevel">1</b></div>
+      <div>Roster: <b id="ownedCount">0</b>/25</div>
+      <div>Wins: <b id="wins">0</b></div>
+      <div>Losses: <b id="losses">0</b></div>
     </div>
-  </section>
 
-  <section id="gods" class="screen">
-    <h2>Your Gods</h2>
-    <div id="ownedGods" class="grid"></div>
-  </section>
+    <div class="action-row">
+      <button onclick="collectOfferings()">Collect Offerings</button>
+      <button onclick="upgradeTemple()">Upgrade Temple</button>
+      <button onclick="healAll()">Healing Shrine</button>
+    </div>
+  </div>
+</section>
 
-  <section id="recruit" class="screen">
-    <h2>Recruit Gods</h2>
-    <p class="muted">Recruit real mythological gods from different pantheons. Higher rarity gods cost more but are stronger.</p>
-    <div id="recruitList" class="grid"></div>
-  </section>
+<section id="roster" class="screen">
+  <h2>Your Gods</h2>
+  <p class="muted">View your collected gods, stats, ranks, and health.</p>
+  <div id="ownedGods" class="grid"></div>
+</section>
 
-  <section id="battle" class="screen">
-    <div class="grid">
-      <div class="card">
-        <h2>Realm Battle</h2>
-        <p class="muted">Your top 3 strongest gods fight against a rival pantheon.</p>
-        <button class="btn" onclick="battle()">Start Battle</button>
-        <button class="btn" onclick="hardBattle()">Challenge Strong Pantheon</button>
+<section id="lineup" class="screen">
+  <h2>Battle Lineup</h2>
+  <p class="muted">Choose up to 3 gods to fight.</p>
+  <div id="lineupList" class="grid"></div>
+</section>
+
+<section id="summon" class="screen">
+  <h2>Summoning Hall</h2>
+  <p class="muted">Summon mythological gods. Duplicates become Essence.</p>
+  <div id="summonList" class="grid"></div>
+</section>
+
+<section id="training" class="screen">
+  <h2>Training Grounds</h2>
+  <p class="muted">Train gods to increase level, rank, attack, defense, speed, and health.</p>
+  <div id="trainingList" class="grid"></div>
+</section>
+
+<section id="relics" class="screen">
+  <h2>Relic Forge</h2>
+  <p class="muted">Relics boost your whole pantheon.</p>
+  <div id="relicList" class="grid"></div>
+</section>
+
+<section id="battle" class="screen">
+  <div class="arena" id="arena">
+    <h2>Realm Battle</h2>
+
+    <div class="battle-field">
+      <div>
+        <h3>Your Pantheon</h3>
+        <div id="playerTeam" class="team"></div>
       </div>
-      <div class="card">
-        <h2>Battle Log</h2>
-        <div id="battleLog" class="battle-log">No battles yet.</div>
+
+      <div>
+        <h3>Enemy Pantheon</h3>
+        <div id="enemyTeam" class="team enemy"></div>
       </div>
     </div>
-  </section>
 
-  <section id="relics" class="screen">
-    <h2>Relics</h2>
-    <p class="muted">Relics boost all gods.</p>
-    <div id="relicList" class="grid"></div>
-  </section>
-
-  <section id="shop" class="screen">
-    <div class="card">
-      <h2>Divine Shop</h2>
-      <p>Buy resources for testing the game.</p>
-      <button class="btn" onclick="buyFaith()">Claim 500 Faith</button>
-      <button class="btn" onclick="buyGems()">Claim 10 Divine Gems</button>
+    <div class="battle-buttons">
+      <button onclick="prepareBattle(false)">Normal Battle</button>
+      <button onclick="prepareBattle(true)">Hard Battle</button>
+      <button onclick="startBattle()">Start Fight</button>
     </div>
-  </section>
+
+    <div id="battleLog" class="battle-log">Choose a battle to begin.</div>
+  </div>
+</section>
+
+<section id="boss" class="screen">
+  <div class="hero-card">
+    <h2>Titan Boss Trials</h2>
+    <p>Bosses are stronger than normal enemies but give better rewards.</p>
+
+    <div class="action-row">
+      <button onclick="prepareBoss('Typhon')">Typhon</button>
+      <button onclick="prepareBoss('Jormungandr')">Jormungandr</button>
+      <button onclick="prepareBoss('Apophis')">Apophis</button>
+      <button onclick="startBattle()">Start Boss Fight</button>
+    </div>
+  </div>
+</section>
+
+<section id="oracle" class="screen">
+  <div class="hero-card">
+    <h2>Oracle Shrine</h2>
+    <p>Claim daily rewards.</p>
+    <button onclick="claimOracle()">Claim Oracle Reward</button>
+    <div id="oracleStatus" class="info-box"></div>
+  </div>
+</section>
+
+<section id="goals" class="screen">
+  <h2>Realm Goals</h2>
+  <p class="muted">Complete goals for rewards.</p>
+  <div id="goalList" class="grid"></div>
+</section>
+
+<section id="settings" class="screen">
+  <div class="hero-card">
+    <h2>Settings</h2>
+
+    <div class="action-row">
+      <button onclick="saveGame(true)">Save Game</button>
+      <button onclick="exportSave()">Export Save</button>
+      <button onclick="importSave()">Import Save</button>
+      <button class="danger-btn" onclick="resetGame()">Reset Game</button>
+    </div>
+
+    <textarea id="saveBox" placeholder="Export/import save data here."></textarea>
+  </div>
+</section>
 
 </main>
 
-<script>
-const ranks = [
-  "Mortal Spirit",
-  "Lesser Deity",
-  "Divine Champion",
-  "High God",
-  "Pantheon Lord",
-  "Elder God",
-  "Cosmic God"
-];
-
-const godPool = [
-  {name:"Zeus", pantheon:"Greek", icon:"⚡", rarity:"Legendary", atk:45, def:32, cost:300},
-  {name:"Athena", pantheon:"Greek", icon:"🛡️", rarity:"Epic", atk:30, def:42, cost:220},
-  {name:"Ares", pantheon:"Greek", icon:"⚔️", rarity:"Epic", atk:42, def:24, cost:220},
-  {name:"Poseidon", pantheon:"Greek", icon:"🌊", rarity:"Epic", atk:35, def:34, cost:240},
-  {name:"Hades", pantheon:"Greek", icon:"💀", rarity:"Legendary", atk:44, def:38, cost:320},
-
-  {name:"Odin", pantheon:"Norse", icon:"🪶", rarity:"Legendary", atk:40, def:40, cost:300},
-  {name:"Thor", pantheon:"Norse", icon:"🔨", rarity:"Legendary", atk:48, def:34, cost:320},
-  {name:"Loki", pantheon:"Norse", icon:"🃏", rarity:"Epic", atk:36, def:25, cost:230},
-  {name:"Freya", pantheon:"Norse", icon:"✨", rarity:"Epic", atk:32, def:36, cost:230},
-
-  {name:"Ra", pantheon:"Egyptian", icon:"☀️", rarity:"Legendary", atk:46, def:30, cost:310},
-  {name:"Anubis", pantheon:"Egyptian", icon:"☥", rarity:"Epic", atk:34, def:40, cost:240},
-  {name:"Isis", pantheon:"Egyptian", icon:"🌙", rarity:"Epic", atk:28, def:42, cost:230},
-  {name:"Osiris", pantheon:"Egyptian", icon:"🌿", rarity:"Legendary", atk:38, def:44, cost:310},
-  {name:"Horus", pantheon:"Egyptian", icon:"👁️", rarity:"Epic", atk:37, def:32, cost:240},
-
-  {name:"Amaterasu", pantheon:"Japanese", icon:"🌅", rarity:"Legendary", atk:43, def:39, cost:320},
-  {name:"Susanoo", pantheon:"Japanese", icon:"🌪️", rarity:"Epic", atk:40, def:28, cost:240},
-  {name:"Quetzalcoatl", pantheon:"Aztec", icon:"🐍", rarity:"Legendary", atk:44, def:36, cost:330}
-];
-
-const relics = [
-  {name:"Thunderbolt Relic", bonus:"Attack +10%", cost:250, owned:false, type:"atk"},
-  {name:"Aegis Shield", bonus:"Defense +10%", cost:250, owned:false, type:"def"},
-  {name:"Crown of Worship", bonus:"Temple rewards +25%", cost:350, owned:false, type:"temple"},
-  {name:"Cosmic Rune", bonus:"Battle rewards +25%", cost:500, owned:false, type:"battle"}
-];
-
-let game = {
-  faith: 200,
-  worshippers: 50,
-  gems: 5,
-  templeLevel: 1,
-  wins: 0,
-  losses: 0,
-  gods: []
-};
-
-function saveGame(){
-  localStorage.setItem("realmOfGodsSave", JSON.stringify({game, relics}));
-  alert("Game saved.");
-}
-
-function loadGame(){
-  const save = localStorage.getItem("realmOfGodsSave");
-  if(save){
-    const data = JSON.parse(save);
-    game = data.game;
-    if(data.relics){
-      data.relics.forEach((r,i)=> relics[i].owned = r.owned);
-    }
-  }
-}
-
-function resetGame(){
-  if(confirm("Reset your game?")){
-    localStorage.removeItem("realmOfGodsSave");
-    location.reload();
-  }
-}
-
-function showScreen(id){
-  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  render();
-}
-
-function totalPower(){
-  let atkBonus = relics.some(r=>r.type==="atk" && r.owned) ? 1.1 : 1;
-  let defBonus = relics.some(r=>r.type==="def" && r.owned) ? 1.1 : 1;
-
-  return Math.floor(game.gods.reduce((sum,g)=>{
-    return sum + (g.atk * atkBonus) + (g.def * defBonus) + (g.level * 15) + (g.rank * 35);
-  },0));
-}
-
-function recruitGod(index){
-  const base = godPool[index];
-  if(game.faith < base.cost){
-    alert("Not enough Faith.");
-    return;
-  }
-
-  if(game.gods.some(g=>g.name===base.name)){
-    alert("You already recruited this god.");
-    return;
-  }
-
-  game.faith -= base.cost;
-  game.gods.push({
-    ...base,
-    level:1,
-    rank:0,
-    xp:0
-  });
-
-  saveGame();
-  render();
-}
-
-function upgradeGod(i){
-  const god = game.gods[i];
-  const cost = 40 + god.level * 25 + god.rank * 50;
-
-  if(game.faith < cost){
-    alert("Not enough Faith.");
-    return;
-  }
-
-  game.faith -= cost;
-  god.level++;
-  god.atk += 4;
-  god.def += 3;
-
-  if(god.level % 5 === 0 && god.rank < ranks.length - 1){
-    god.rank++;
-  }
-
-  saveGame();
-  render();
-}
-
-function collectTemple(){
-  let templeBonus = relics.some(r=>r.type==="temple" && r.owned) ? 1.25 : 1;
-  let faithGain = Math.floor((75 + game.templeLevel * 30 + game.worshippers * 0.15) * templeBonus);
-  let worshipGain = 10 + game.templeLevel * 5;
-
-  game.faith += faithGain;
-  game.worshippers += worshipGain;
-
-  alert(`Collected ${faithGain} Faith and ${worshipGain} Worshippers.`);
-  saveGame();
-  render();
-}
-
-function upgradeTemple(){
-  const cost = game.templeLevel * 150;
-  if(game.faith < cost){
-    alert("Not enough Faith.");
-    return;
-  }
-
-  game.faith -= cost;
-  game.templeLevel++;
-  saveGame();
-  render();
-}
-
-function battle(){
-  runBattle(false);
-}
-
-function hardBattle(){
-  runBattle(true);
-}
-
-function runBattle(hard){
-  if(game.gods.length < 1){
-    alert("Recruit at least one god first.");
-    return;
-  }
-
-  const playerPower = totalPower();
-  const enemyPower = hard
-    ? Math.floor(180 + game.wins * 55 + Math.random()*160)
-    : Math.floor(80 + game.wins * 35 + Math.random()*100);
-
-  const roll = playerPower + Math.floor(Math.random()*120);
-  const enemyRoll = enemyPower + Math.floor(Math.random()*120);
-
-  let log = `<p><span class="gold">Your Power:</span> ${playerPower}</p>`;
-  log += `<p><span class="danger">Enemy Pantheon Power:</span> ${enemyPower}</p>`;
-
-  if(roll >= enemyRoll){
-    game.wins++;
-
-    let battleBonus = relics.some(r=>r.type==="battle" && r.owned) ? 1.25 : 1;
-    let faithReward = Math.floor((hard ? 220 : 120) * battleBonus);
-    let worshipReward = hard ? 45 : 25;
-    let gemReward = hard ? 2 : 1;
-
-    game.faith += faithReward;
-    game.worshippers += worshipReward;
-    game.gems += gemReward;
-
-    game.gods.forEach(g=>{
-      g.xp += hard ? 40 : 20;
-      if(g.xp >= 100){
-        g.xp -= 100;
-        g.level++;
-        g.atk += 3;
-        g.def += 2;
-      }
-    });
-
-    log += `<p class="good">Victory. Your gods gained power.</p>`;
-    log += `<p>Rewards: ${faithReward} Faith, ${worshipReward} Worshippers, ${gemReward} Gems.</p>`;
-  } else {
-    game.losses++;
-    let lostFaith = Math.min(game.faith, hard ? 80 : 40);
-    game.faith -= lostFaith;
-
-    log += `<p class="danger">Defeat. Rival gods overpowered your realm.</p>`;
-    log += `<p>Lost ${lostFaith} Faith.</p>`;
-  }
-
-  document.getElementById("battleLog").innerHTML = log;
-  saveGame();
-  render();
-}
-
-function buyRelic(i){
-  const relic = relics[i];
-
-  if(relic.owned){
-    alert("Already owned.");
-    return;
-  }
-
-  if(game.faith < relic.cost){
-    alert("Not enough Faith.");
-    return;
-  }
-
-  game.faith -= relic.cost;
-  relic.owned = true;
-  saveGame();
-  render();
-}
-
-function buyFaith(){
-  game.faith += 500;
-  saveGame();
-  render();
-}
-
-function buyGems(){
-  game.gems += 10;
-  saveGame();
-  render();
-}
-
-function renderRecruit(){
-  document.getElementById("recruitList").innerHTML = godPool.map((g,i)=>{
-    const owned = game.gods.some(x=>x.name===g.name);
-    return `
-      <div class="card ${owned?'locked':''}">
-        <div class="god-icon">${g.icon}</div>
-        <h3>${g.name}</h3>
-        <p class="muted">${g.pantheon} Pantheon • ${g.rarity}</p>
-        <div class="stats">
-          <div class="stat">Attack: ${g.atk}</div>
-          <div class="stat">Defense: ${g.def}</div>
-        </div>
-        <button class="btn" onclick="recruitGod(${i})">${owned?'Owned':'Recruit - '+g.cost+' Faith'}</button>
-      </div>
-    `;
-  }).join("");
-}
-
-function renderOwnedGods(){
-  if(game.gods.length === 0){
-    document.getElementById("ownedGods").innerHTML = `<div class="card"><h3>No gods recruited yet.</h3><p>Go to Recruit and choose your first god.</p></div>`;
-    return;
-  }
-
-  document.getElementById("ownedGods").innerHTML = game.gods.map((g,i)=>{
-    const cost = 40 + g.level * 25 + g.rank * 50;
-    return `
-      <div class="card">
-        <div class="god-icon">${g.icon}</div>
-        <h3>${g.name}</h3>
-        <p class="muted">${g.pantheon} • ${g.rarity}</p>
-        <p class="rank">${ranks[g.rank]}</p>
-        <div class="stats">
-          <div class="stat">Level: ${g.level}</div>
-          <div class="stat">XP: ${g.xp}/100</div>
-          <div class="stat">Attack: ${g.atk}</div>
-          <div class="stat">Defense: ${g.def}</div>
-        </div>
-        <button class="btn" onclick="upgradeGod(${i})">Upgrade - ${cost} Faith</button>
-      </div>
-    `;
-  }).join("");
-}
-
-function renderRelics(){
-  document.getElementById("relicList").innerHTML = relics.map((r,i)=>`
-    <div class="card ${r.owned?'locked':''}">
-      <h3>${r.name}</h3>
-      <p>${r.bonus}</p>
-      <button class="btn" onclick="buyRelic(${i})">${r.owned?'Owned':'Buy - '+r.cost+' Faith'}</button>
-    </div>
-  `).join("");
-}
-
-function render(){
-  document.getElementById("faith").innerText = game.faith;
-  document.getElementById("worshippers").innerText = game.worshippers;
-  document.getElementById("gems").innerText = game.gems;
-  document.getElementById("power").innerText = totalPower();
-
-  document.getElementById("templeLevel").innerText = game.templeLevel;
-  document.getElementById("ownedCount").innerText = game.gods.length;
-  document.getElementById("wins").innerText = game.wins;
-  document.getElementById("losses").innerText = game.losses;
-  document.getElementById("templeCost").innerText = game.templeLevel * 150;
-
-  renderRecruit();
-  renderOwnedGods();
-  renderRelics();
-}
-
-loadGame();
-render();
-</script>
-
+<script src="script.js?v=1"></script>
 </body>
 </html>
